@@ -37,7 +37,7 @@ const App: React.FC = () => {
       if (ShowUi && e.code === 'Escape') {
         if (!isEnvBrowser()) {
           if (ShowUi) {
-            fetchNui('ui:Close', { name: 'setVisibleMenu' });
+            fetchNui('Zoxe_Lifestyle:Close', { name: 'ShowUi' });
           }
         } else {
           setShowUi(false);

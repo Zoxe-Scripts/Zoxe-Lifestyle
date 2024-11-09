@@ -72,11 +72,13 @@ const Info: React.FC<{ visible: boolean, args: any, details: number | null }> = 
                         <Group w="50vh" h="17vh" mt="xs">
                             <ScrollArea w={'100%'} h={'100%'} ml={'1vh'}>
                                 {args.Items.map((item: { Name: string, Icon: [string, string] }, index: number) => (
-                                    <Text size="lg" color="white" mb="md" c="dimmed" style={{ display: 'flex', gap: '1vh', alignItems: 'center' }}>
-                                        <Avatar size={30} radius={30}>
-                                            <Icon Lib={item.Icon[0]} Name={item.Icon[1]} Size={18} />
-                                        </Avatar> {item.Name}
-                                    </Text>
+                                    <div key={index}>
+                                        <Text size="lg" color="white" mb="md" c="dimmed" style={{ display: 'flex', gap: '1vh', alignItems: 'center' }}>
+                                            <Avatar size={30} radius={30}>
+                                                <Icon Lib={item.Icon[0]} Name={item.Icon[1]} Size={18} />
+                                            </Avatar> {item.Name}
+                                        </Text>
+                                    </div>
                                 ))}
                             </ScrollArea>
                         </Group>
