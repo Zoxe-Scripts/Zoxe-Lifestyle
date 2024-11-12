@@ -15,19 +15,23 @@ function SendNui(action, data)
     SendNUIMessage({ action = action, data = data })
 end
 
-function GetTableStyle()
-    for i = 1, #Config.Life do
-        local ConfigStyle = Config.Life[i]
-        return ConfigStyle
-    end
-end
-
 function Close()
     if Cam.ExistCam() then
         Cam.DestroyCamera()
     end
     if DoesEntityExist(Ped) then
         DeleteEntity(Ped)
+    end
+    ClearFocus()
+end
+
+function Open()
+    local name = 'ShowUi'
+
+    if State[name] ~= nil then
+        ShowNui(name, not State[name])
+    else
+        print(name)
     end
 end
 
@@ -36,22 +40,19 @@ RegisterNuiCallback('Zoxe_Lifestyle:GetTableStyle', function(data, cb)
 end)
 
 RegisterNuiCallback('Zoxe_Lifestyle:SetTableStyle', function(data, cb)
-    -- print(json.encode(data.card, { indent = true }))
+    print(json.encode(data.card, { indent = true }))
+
     local Actions = Config.Life[data.index + 1].Action
+    LoadAction(Actions)
 
-    if DoesEntityExist(Ped) then
-        DeleteEntity(Ped)
-    end
+    cb(true)
+end)
 
-    DoScreenFadeOut(1000)
+RegisterNuiCallback('Zoxe_Lifestyle:Success', function(data, cb)
+    print(json.encode(data.card, { indent = true }))
 
-    SetFocusArea(Actions.Preview.PedCoords.x, Actions.Preview.PedCoords.y, Actions.Preview.PedCoords.z, 0.0, 0.0, 0.0)
-    Wait(1000)
-
-    Action(Actions)
-
-    Wait(1000)
-    DoScreenFadeIn(1000)
+    local Items = Config.Life[data.index + 1].Items
+    TriggerServerEvent('Zoxe_Lifestyle:Success', cache.serverId, Items)
 
     cb(true)
 end)
@@ -62,21 +63,22 @@ RegisterNuiCallback('Zoxe_Lifestyle:Close', function(data, cb)
     cb(true)
 end)
 
-RegisterNuiCallback('Zoxe_Lifestyle:Success', function(data, cb)
-    print(json.encode(data.card, { indent = true }))
-    cb(true)
+RegisterNetEvent('Zoxe_Lifestyle:Open', function()
+    Open()
+end)
+
+RegisterNetEvent('Zoxe_Lifestyle:Close', function()
+    Open()
+    Close()
 end)
 
 exports("GetLocalStateUi", function(uiName)
     return LocalPlayer.state[uiName]
 end)
 
-RegisterCommand('New', function(source, args, raw)
-    local name = 'ShowUi'
+exports('OpenUi', Open)
+exports('ForceCloseUi', Close)
 
-    if State[name] ~= nil then
-        ShowNui(name, not State[name])
-    else
-        print(name)
-    end
+RegisterCommand('Zoxe_Lifestyle', function(source, args, raw)
+    Open()
 end)

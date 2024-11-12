@@ -32,7 +32,7 @@ function Cam.StartCamera(vehicle, withd, distance, height)
     SetFocusPosAndVel(camCoords.x, camCoords.y, camCoords.z, 0.0, 0.0, 0.0)
     SetFocusArea(camCoords.x, camCoords.y, camCoords.z, 0.0, 0.0, 0.0)
 
-    RenderScriptCams(true, true, 1350, 1, 0)
+    RenderScriptCams(true, true, 1650, 1, 0)
 
     CreateThread(function()
         repeat

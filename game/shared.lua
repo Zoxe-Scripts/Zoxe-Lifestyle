@@ -207,3 +207,8 @@ Config.Life = {
         }
     }
 }
+
+function Config.Success(source, item, quantity)
+    TriggerClientEvent('Zoxe_Lifestyle:Close', source)
+    exports.ox_inventory:AddItem(source, item, quantity)
+end
