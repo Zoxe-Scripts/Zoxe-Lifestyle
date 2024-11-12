@@ -1,3 +1,5 @@
+Config = {}
+
 Config.Life = {
     {
         Icon = { 'fa6', 'FaUsb' },
@@ -33,7 +35,16 @@ Config.Life = {
                 Name = 'Pc',
                 Value = { name = 'pc', quantity = 1 },
             }
-        }
+        },
+        Action = {
+            Preview = {
+                PedName = 'ig_lestercrest',
+                PedCoords = vec4(1275.481323, -1710.778076, 54.756836, 116.220474),
+            },
+            View = {
+
+            }
+        },
     },
     {
         Icon = { 'fa6', 'FaBriefcase' },
@@ -64,6 +75,12 @@ Config.Life = {
                 Icon = { 'fi', 'FiWatch' },
                 Name = 'Watch',
                 Value = { name = 'watch', quantity = 3 },
+            }
+        },
+        Action = {
+            Preview = {
+                PedName = 'ig_bankman',
+                PedCoords = vec4(-75.164833, -802.681335, 243.373657, 218.267715),
             }
         }
     },
@@ -102,6 +119,12 @@ Config.Life = {
                 Name = 'Knife',
                 Value = { name = 'weapon_knife', quantity = 1 },
             }
+        },
+        Action = {
+            Preview = {
+                PedName = 'ig_claypain',
+                PedCoords = vec4(1052.571411, -3202.826416, -39.164062, 99.212593),
+            }
         }
     },
     {
@@ -137,6 +160,12 @@ Config.Life = {
                 Name = 'Gasolio',
                 Value = { name = 'weapon_petrolcan', quantity = 3 },
             }
+        },
+        Action = {
+            Preview = {
+                PedName = 'ig_ortega',
+                PedCoords = vec4(-2162.136230, 1126.615356, 28.656372, 2.834646),
+            }
         }
     },
     {
@@ -168,6 +197,12 @@ Config.Life = {
                 Icon = { 'ti', 'TiBeer' },
                 Name = 'Beer',
                 Value = { name = 'beer', quantity = 3 },
+            }
+        },
+        Action = {
+            Preview = {
+                PedName = 'ig_djsoljakob',
+                PedCoords = vec4(217.872528, -815.841736, 30.594116, 192.755920),
             }
         }
     }

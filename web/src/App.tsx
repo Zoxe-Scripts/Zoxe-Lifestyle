@@ -10,7 +10,7 @@ import Select from './components/Select';
 debugData([
   {
     action: 'ShowUi',
-    data: true
+    data: true,
   },
 ], 100);
 
@@ -54,7 +54,7 @@ const App: React.FC = () => {
 
   return (
     <>
-      <Select visible={ShowUi} />
+      {ShowUi && <Select visible={ShowUi} />}
     </>
   );
 };

@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 
-import { Card, Text, Badge, Button, Group, ScrollArea, Center, Transition, Box, useMantineTheme } from '@mantine/core';
+import { Card, Text, Badge, Button, Group, ScrollArea, Center, Transition, Box, Loader, useMantineTheme } from '@mantine/core';
 
 import { fetchNui } from '../functions/fetchNui';
+import { isEnvBrowser } from '../functions/misc';
 
 import Icon from '../shared/Icon';
 import Cfg from '../shared/Config';
@@ -11,7 +12,27 @@ import Lang from '../shared/Lang';
 import Info from './Info';
 import Check from './Check';
 
-const Cards = [
+interface CardProp {
+    Icon: [string, string];
+    Title: string;
+    Image: string;
+    Badge: {
+        Color: string;
+        Value: [string, string][];
+    };
+    Description: string;
+    Button: {
+        Color: string;
+        Icon: [string, string];
+        Value: string;
+    };
+    Items: {
+        Icon: [string, string];
+        Name: string;
+    }[];
+}
+
+const Data: CardProp[] = [
     {
         Icon: ['fa6', 'FaUsb'],
         Title: 'Hacker',
@@ -159,22 +180,132 @@ const Cards = [
     },
 ];
 
+const Cards = ({
+    data, index, selectedCard, onClickCard, onClickButton
+}: {
+    data: CardProp,
+    index: number,
+    selectedCard: number,
+    onClickCard: (index: number) => void,
+    onClickButton: (index: number) => void
+}) => {
+    return (
+        <Card key={index} shadow="sm" padding="md" radius="md"
+            style={{
+                maxWidth: '33.5vh',
+                height: selectedCard ? 'auto' : 'fit-content',
+                transform: selectedCard ? 'scale(1)' : 'scale(0.98)',
+                transition: 'transform 0.3s ease, height 0.3s ease-in-out'
+            }}
+            onClick={() => onClickCard(index)}
+        >
+            <Group mb="xs"
+                style={{
+                    justifyContent: 'space-between'
+                }}
+            >
+                <Text fw={500} style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '1vh'
+                }}>
+                    <Icon
+                        Lib={data.Icon[0]}
+                        Name={data.Icon[1]}
+                        Size={16}
+                    />
+                    {data.Title}
+                </Text>
+                <Badge color={data.Badge.Color}>
+                    {
+                        data.Badge.Value.map((data, index) => {
+                            return <Icon
+                                key={index}
+                                Lib={data[0]}
+                                Name={data[1]}
+                                Size={13}
+                            />;
+                        })
+                    }
+                </Badge>
+            </Group>
+
+            <Text size="sm" c="dimmed">
+                {data.Description}
+            </Text>
+
+            <Transition
+                mounted={selectedCard == index}
+                transition="pop"
+                duration={400}
+                timingFunction="ease"
+            >
+                {(styles) => (
+                    <Button color={data.Button.Color} fullWidth mt="md" radius="md" variant="light"
+                        style={{
+                            ...styles,
+                            cursor: 'pointer'
+                        }}
+                        onClick={() => onClickButton(index)}
+                    >
+                        <Icon
+                            Lib={data.Button.Icon[0]}
+                            Name={data.Button.Icon[1]}
+                            Size={14}
+                            Style={{
+                                marginRight: '1vh'
+                            }}
+                        /> {data.Button.Value}
+                    </Button>
+                )}
+            </Transition>
+        </Card>
+    );
+}
+
 const Select: React.FC<{ visible: boolean }> = ({ visible }) => {
     const theme = useMantineTheme();
     const lang = Lang();
 
-    const [SelectedCard, SelectCard] = useState<number | null>(null);
-    const [OldsCard, OldCard] = useState<number | null>(null);
+    const [Loading, SetLoading] = useState<boolean>(true);
+
+    const [SelectedCard, SelectCard] = useState<{ index: number, card: CardProp | null }>({ index: -1, card: null });
+    const [OldCard, SetOldCard] = useState<{ index: number, card: CardProp | null }>({ index: -1, card: null });
+    const [CardData, SetCardData] = useState<CardProp[]>([]);
+
+    const Details = useRef<{ index: number, card: CardProp | null }>({ index: -1, card: null });
+
     const [ClickedButton, ClickButton] = useState<boolean>(false);
 
-    const ClickCards = (index: number) => {
-        if (SelectedCard === index) {
-            SelectCard(null);
+    const GetTableStyle = async () => {
+        SetLoading(true);
+        if (!isEnvBrowser()) {
+            const Card = await fetchNui('Zoxe_Lifestyle:GetTableStyle') as CardProp[];
+            SetCardData(Array.isArray(Card) ? Card : [Card]);
         } else {
-            OldCard(SelectedCard);
+            SetCardData(Data);
+        }
+        setTimeout(() => {
+            SetLoading(false);
+        }, 500);
+    };
+
+    const ClickCards = (index: number) => {
+        if (SelectedCard.index === index) {
+            SelectCard({ index: -1, card: null });
+        } else {
+            SetOldCard(SelectedCard);
             setTimeout(() => {
-                SelectCard(index);
+                SelectCard({ index, card: CardData[index] });
+                fetchNui('Zoxe_Lifestyle:SetTableStyle', {
+                    card: CardData[index],
+                    index: index
+                });
             }, 300);
+            Details.current = {
+                card: CardData[index],
+                index: index
+            }
         }
     };
 
@@ -184,106 +315,50 @@ const Select: React.FC<{ visible: boolean }> = ({ visible }) => {
     };
 
     useEffect(() => {
-        if (SelectedCard !== null) {
-            console.log('Selected card:', SelectedCard);
-        }
-    }, [SelectedCard]);
+        if (visible) GetTableStyle();
+    }, [visible]);
 
     return (
         <>
-            {SelectedCard !== null && <Info visible={true} args={Cards[SelectedCard]} details={OldsCard} />}
-            {ClickedButton !== false && <Check visible={true} args={ClickButton} />}
+            {Loading ? (
+                <Center style={{ height: '100vh' }}>
+                    <Loader color="blue" />
+                </Center>
+            ) : (
+                <>
+                    {SelectedCard.card && SelectedCard !== null && <Info visible={true} args={SelectedCard} details={OldCard} />}
+                    {ClickedButton !== false && <Check visible={true} args={ClickButton} details={Details.current} />}
 
-            <Box miw={1920} mih={1080}>
-                <ScrollArea style={{
-                    position: 'absolute',
-                    bottom: '3vh',
-                    left: ClickedButton === false ? '0' : '100%',
-                    transition: 'left 0.5s ease',
-                    width: '100%',
-                }}>
-                    <Center style={{
-                        gap: '1.5vh', display: 'flex', justifyContent: 'center'
-                    }}>
-                        {
-                            Cards.slice(0, 5).map((data, index) => {
-                                return (
-                                    <Card key={index} shadow="sm" padding="md" radius="md"
-                                        style={{
-                                            maxWidth: '33.5vh',
-                                            height: SelectedCard === index ? 'auto' : 'fit-content',
-                                            transform: SelectedCard === index ? 'scale(1)' : 'scale(0.98)',
-                                            transition: 'transform 0.3s ease, height 0.3s ease-in-out'
-                                        }}
-                                        onClick={() => ClickCards(index)}
-                                    >
-                                        <Group mb="xs"
-                                            style={{
-                                                justifyContent: 'space-between'
-                                            }}
-                                        >
-                                            <Text fw={500} style={{
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                gap: '1vh'
-                                            }}>
-                                                <Icon
-                                                    Lib={data.Icon[0]}
-                                                    Name={data.Icon[1]}
-                                                    Size={16}
-                                                />
-                                                {data.Title}
-                                            </Text>
-                                            <Badge color={data.Badge.Color}>
-                                                {
-                                                    data.Badge.Value.map((data, index) => {
-                                                        return <Icon
-                                                            key={index}
-                                                            Lib={data[0]}
-                                                            Name={data[1]}
-                                                            Size={13}
-                                                        />;
-                                                    })
-                                                }
-                                            </Badge>
-                                        </Group>
-
-                                        <Text size="sm" c="dimmed">
-                                            {data.Description}
-                                        </Text>
-
-                                        <Transition
-                                            mounted={SelectedCard === index}
-                                            transition="pop"
-                                            duration={400}
-                                            timingFunction="ease"
-                                        >
-                                            {(styles) => (
-                                                <Button color={data.Button.Color} fullWidth mt="md" radius="md" variant="light"
-                                                    style={{
-                                                        ...styles,
-                                                        cursor: 'pointer'
-                                                    }}
-                                                    onClick={() => ClickButtons(index)}
-                                                >
-                                                    <Icon
-                                                        Lib={data.Button.Icon[0]}
-                                                        Name={data.Button.Icon[1]}
-                                                        Size={14}
-                                                        Style={{
-                                                            marginRight: '1vh'
-                                                        }}
-                                                    /> {data.Button.Value}
-                                                </Button>
-                                            )}
-                                        </Transition>
-                                    </Card>
-                                );
-                            })
-                        }
-                    </Center>
-                </ScrollArea>
-            </Box>
+                    <Box miw={1920} mih={1080}>
+                        <ScrollArea style={{
+                            position: 'absolute',
+                            bottom: '3vh',
+                            left: ClickedButton === false ? '0' : '100%',
+                            transition: 'left 0.5s ease',
+                            width: '100%',
+                        }}>
+                            <Center style={{
+                                gap: '1.5vh', display: 'flex', justifyContent: 'center'
+                            }}>
+                                {
+                                    CardData.slice(0, 5).map((data, index) => {
+                                        return (
+                                            <Cards
+                                                key={index}
+                                                data={data}
+                                                index={index}
+                                                selectedCard={SelectedCard.index}
+                                                onClickCard={ClickCards}
+                                                onClickButton={ClickButtons}
+                                            />
+                                        );
+                                    })
+                                }
+                            </Center>
+                        </ScrollArea>
+                    </Box>
+                </>
+            )}
         </>
     );
 };

@@ -9,14 +9,13 @@ import Icon from '../shared/Icon';
 import Cfg from '../shared/Config';
 import Lang from '../shared/Lang';
 
-const Check: React.FC<{ visible: boolean, args: (value: boolean) => void }> = ({ visible, args }) => {
+const Check: React.FC<{ visible: boolean, args: (value: boolean) => void, details: any }> = ({ visible, args, details }) => {
     const theme = useMantineTheme();
     const lang = Lang();
 
     const [opened, { open, close }] = useDisclosure(false);
     const [ClickedNotification, ClickNotification] = useState(false);
     const [NotificationedTop, NotificationTop] = useState('-8vh');
-
 
     useEffect(() => {
         if (ClickedNotification) {
@@ -57,6 +56,7 @@ const Check: React.FC<{ visible: boolean, args: (value: boolean) => void }> = ({
                                 ClickNotification(true);
                                 setTimeout(() => {
                                     ClickNotification(false);
+                                    fetchNui('Zoxe_Lifestyle:Success', { card: details.card, index: details.index });
                                     args(false);
                                 }, 3000);
                             }}
@@ -71,7 +71,6 @@ const Check: React.FC<{ visible: boolean, args: (value: boolean) => void }> = ({
             )}
         </>
     );
-
 };
 
 export default Check;

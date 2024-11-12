@@ -5,6 +5,8 @@ lua54 'yes'
 client_scripts {
     'game/framework/*.lua',
     'game/client.lua',
+    'game/cam.lua',
+    'game/action.lua',
 }
 
 shared_script {
