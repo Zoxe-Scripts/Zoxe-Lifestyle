@@ -41,9 +41,7 @@ Config.Life = {
                 PedName = 'ig_lestercrest',
                 PedCoords = vec4(1275.481323, -1710.778076, 54.756836, 116.220474),
             },
-            View = {
-
-            }
+            View = 'lester_1_int'
         },
     },
     {
@@ -79,9 +77,10 @@ Config.Life = {
         },
         Action = {
             Preview = {
-                PedName = 'ig_bankman',
+                PedName = 'ig_mp_agent14',
                 PedCoords = vec4(-75.164833, -802.681335, 243.373657, 218.267715),
-            }
+            },
+            View = 'apa_pri_int'
         }
     },
     {
@@ -124,7 +123,8 @@ Config.Life = {
             Preview = {
                 PedName = 'ig_claypain',
                 PedCoords = vec4(1052.571411, -3202.826416, -39.164062, 99.212593),
-            }
+            },
+            View = 'fix_low_mcs1'
         }
     },
     {
@@ -163,9 +163,10 @@ Config.Life = {
         },
         Action = {
             Preview = {
-                PedName = 'ig_ortega',
+                PedName = 'ig_hao',
                 PedCoords = vec4(-2162.136230, 1126.615356, 28.656372, 2.834646),
-            }
+            },
+            View = 'tun_meet_int'
         }
     },
     {
@@ -201,14 +202,14 @@ Config.Life = {
         },
         Action = {
             Preview = {
-                PedName = 'ig_djsoljakob',
+                PedName = 'ig_jimmydisanto',
                 PedCoords = vec4(217.872528, -815.841736, 30.594116, 192.755920),
-            }
+            },
+            View = 'fam_1_ext_2'
         }
     }
 }
 
 function Config.Success(source, item, quantity)
-    TriggerClientEvent('Zoxe_Lifestyle:Close', source)
     exports.ox_inventory:AddItem(source, item, quantity)
 end

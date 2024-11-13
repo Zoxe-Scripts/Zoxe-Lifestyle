@@ -6,5 +6,6 @@ RegisterNetEvent('Zoxe_Lifestyle:Success', function(source, items)
         local quantity = itemData.Value.quantity
 
         Config.Success(source, item, quantity)
+        TriggerClientEvent('Zoxe_Lifestyle:Close', source)
     end
 end)

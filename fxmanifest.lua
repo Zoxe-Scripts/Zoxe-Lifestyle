@@ -3,10 +3,10 @@ game 'gta5'
 lua54 'yes'
 
 client_scripts {
-    'game/framework/*.lua',
     'game/client.lua',
     'game/cam.lua',
     'game/action.lua',
+    'game/cutscene.lua'
 }
 
 shared_script {

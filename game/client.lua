@@ -51,6 +51,9 @@ end)
 RegisterNuiCallback('Zoxe_Lifestyle:Success', function(data, cb)
     print(json.encode(data.card, { indent = true }))
 
+    local Actions = Config.Life[data.index + 1].Action
+    Cutscene(Actions.View)
+
     local Items = Config.Life[data.index + 1].Items
     TriggerServerEvent('Zoxe_Lifestyle:Success', cache.serverId, Items)
 
