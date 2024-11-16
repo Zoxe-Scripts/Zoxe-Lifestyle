@@ -28,11 +28,11 @@ function Cam.StartCamera(vehicle, withd, distance, height)
 
     camera = newCam
 
-    ClearFocus()
     SetFocusPosAndVel(camCoords.x, camCoords.y, camCoords.z, 0.0, 0.0, 0.0)
     SetFocusArea(camCoords.x, camCoords.y, camCoords.z, 0.0, 0.0, 0.0)
+    ClearFocus()
 
-    RenderScriptCams(true, true, 1650, 1, 0)
+    RenderScriptCams(true, true, 1650, true, false)
 
     CreateThread(function()
         repeat
@@ -54,7 +54,7 @@ end
 
 function Cam.DestroyCamera()
     if camera then
-        RenderScriptCams(false, true, 1250, 1, 0)
+        RenderScriptCams(false, true, 1250, true, false)
         DestroyCam(camera, false)
         camera = nil
     end

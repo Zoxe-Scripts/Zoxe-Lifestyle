@@ -164,7 +164,7 @@ Config.Life = {
         Action = {
             Preview = {
                 PedName = 'ig_hao',
-                PedCoords = vec4(-2162.136230, 1126.615356, 28.656372, 2.834646),
+                PedCoords = vec4(-2161.6123, 1111.7893, 27.6593, 177.8081),
             },
             View = 'tun_meet_int'
         }
@@ -203,7 +203,7 @@ Config.Life = {
         Action = {
             Preview = {
                 PedName = 'ig_jimmydisanto',
-                PedCoords = vec4(217.872528, -815.841736, 30.594116, 192.755920),
+                PedCoords = vec4(-838.0992, 162.4300, 67.8284, 99.7377),
             },
             View = 'fam_1_ext_2'
         }

@@ -1,14 +1,13 @@
 Ped = nil
 
 function LoadAction(Actions)
+    DoScreenFadeOut(1000)
+
+    Wait(1000)
+
     if DoesEntityExist(Ped) then
         DeleteEntity(Ped)
     end
-
-    DoScreenFadeOut(1000)
-
-    SetFocusArea(Actions.Preview.PedCoords.x, Actions.Preview.PedCoords.y, Actions.Preview.PedCoords.z, 0.0, 0.0, 0.0)
-    Wait(1000)
 
     Action(Actions)
 
@@ -31,6 +30,8 @@ function Action(Value)
 
     Cam.LoadCam(ped)
     Cam.StartCamera(ped, -0.5, 5.0, 0.5)
+
+    SetFocusArea(coords.x, coords.y, coords.z, 0.0, 0.0, 0.0)
 end
 
 CreateThread(function()
